@@ -31,7 +31,10 @@ def normalizar(cadena):
       Cadena de texto con la palabra normalizada
     """
     # TODO: Implementa esta función (y elimina la instrucción pass)
-    pass
+    cadena = cadena.lower()
+    cadena = cadena.strip()
+    cadena = cadena.replace("á","a").replace("é","e").replace("í","i").replace("ó","o").replace("ú","u").replace("ä","a").replace("ë","e").replace("ï","i").replace("ö","o").replace("ü","u")
+    return cadena
 
 def enmascarar(palabra_secreta, letras_usadas=""):
     '''Devuelve una cadena de texto con la palabra enmascarada. 
@@ -45,7 +48,12 @@ def enmascarar(palabra_secreta, letras_usadas=""):
       Cadena de texto con la palabra enmascarada
     '''
     # TODO: Implementa esta función (y elimina la instrucción pass)
-    pass
+    res = ""
+    for c in palabra_secreta:
+        if c not in letras_usadas:
+            c = "_"
+        res += c
+    return res
 
 
 def ha_ganado(palabra_enmascarada):
@@ -58,13 +66,62 @@ def ha_ganado(palabra_enmascarada):
     - True si el jugador ha ganado, False en caso contrario
     '''
     # TODO: Implementa esta función (y elimina la instrucción pass)
-    pass
+    if "_" not in palabra_enmascarada:
+        return True
+    else:
+        return False
 
 
 # TODO: Implementa la función mostrar_estado
+def mostrar_estado(palabra_enmascarada, letras_usadas, intentos_r):
+    print(f"Estado:{" ".join(palabra_enmascarada)}")
+    print(f"Letras usadas:{letras_usadas}")
+    print(f"Intentos restantes:{intentos_r}")
 
 # TODO: Implementa la función pedir_letra
+def pedir_letra(letras_usadas):
+    valido = False
+    while valido == False:
+        letra = input("Escribe un solo caracter:").lower()
+        if len(letra) > 1:
+            print("Escriba solo un caracter")
+        elif letra in letras_usadas:
+            print("Esa letra ya fue usada")
+        else:
+            return letra
+
 
 # TODO: Implementa la función jugar
+def jugar(palabra_secreta="", intentos_max:int = 6):
+    palabra_secreta = normalizar(palabra_secreta)
+    if palabra_secreta == "":
+        return None
+    else:
+        masc = enmascarar(palabra_secreta)
+        intentos = intentos_max
+        letras_usadas = ""
+        while ha_ganado(masc) == False and intentos >= 0:
+            mostrar_estado(masc, letras_usadas, intentos)
+            letra=pedir_letra(letras_usadas)
+            letras_usadas += letra
+            if letra not in palabra_secreta:
+                print("La letra seleccionada no se encuentra en la palabra secreta")
+                intentos -=1
+            else:
+                print("Letra acertada")
+                masc = enmascarar(palabra_secreta, letras_usadas)
+        if ha_ganado(masc) == True:
+            print("Ganaste!")
+            print(f"La palabra secreta era {palabra_secreta}")
+        else:
+            print("Sorry little bro, perdiste")
+            print(f"La palabra secreta era {palabra_secreta}")
+
+        
+
+
+
+    
 
 # TODO: Escribe el programa principal
+jugar(elige_palabra())
